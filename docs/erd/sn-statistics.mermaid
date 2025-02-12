@@ -1,0 +1,29 @@
+---
+title: sn-statistics
+---
+erDiagram
+    user_interactions {
+        DateTime timestamp
+        UUID user_id
+        UUID content_id
+        Enum8 interaction_type
+        String platform
+        String device_info
+    }
+    hourly_content_stats {
+        DateTime hour
+        UUID content_id
+        Enum8 content_type
+        UInt32 views
+        UInt32 likes
+        UInt32 comments
+        UInt32 unique_users_count
+    }
+    daily_user_stats {
+        Date date
+        UUID user_id
+        UInt16 posts_created
+        UInt16 likes_given
+        UInt16 comments_made
+        UInt32 views_count
+    }

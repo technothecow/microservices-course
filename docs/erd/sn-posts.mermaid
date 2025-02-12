@@ -1,0 +1,28 @@
+---
+title: sn-posts
+---
+erDiagram
+    posts {
+        uuid post_id PK
+        uuid user_id
+        text content
+        list[text] media_urls
+        timestamp created_at
+        timestamp updated_at
+        boolean is_deleted
+    }
+    post_interactions {
+        uuid post_id PK
+        uuid user_id PK
+        text interaction_type
+        timestamp created_at
+        timestamp updated_at
+    }
+    comments {
+        uuid post_id PK
+        uuid comment_id PK
+        uuid user_id
+        text content
+        timestamp created_at
+        uuid parent_comment_id
+    }
