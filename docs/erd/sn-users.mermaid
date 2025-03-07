@@ -1,0 +1,32 @@
+---
+title: sn-users
+---
+erDiagram
+    users {
+        UUID id PK
+        VARCHAR(50) username
+        VARCHAR(255) email
+        VARCHAR(255) password_hash
+        VARCHAR(100) full_name
+        TIMESTAMP created_at
+        TIMESTAMP last_login
+        BOOLEAN is_active
+    }
+    user_profiles {
+        UUID user_id PK, FK
+        TEXT bio
+        VARCHAR(255) profile_picture_url
+        VARCHAR(100) location
+        VARCHAR(255) website
+        DATE birth_date
+    }
+    followers {
+        UUID id PK
+        UUID follower_id FK
+        UUID following_id FK
+        TIMESTAMP created_at
+    }
+
+    users ||--||user_profiles : "has"
+    users ||--o{ followers : "can be follower"
+    users ||--o{ followers : "can be followed"

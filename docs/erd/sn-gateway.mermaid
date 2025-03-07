@@ -1,0 +1,30 @@
+---
+title: sn-gateway
+---
+erDiagram
+    api_keys {
+        UUID id PK
+        VARCHAR(64) key
+        VARCHAR(50) service_name
+        TIMESTAMP created_at
+        TIMESTAMP expires_at
+        BOOLEAN is_active
+    }
+    rate_limits {
+        UUID id PK
+        UUID api_key_id FK
+        VARCHAR(255) endpoint
+        INTEGER requests_limit
+        INTEGER time_window
+    }
+    audit_logs {
+        UUID id PK
+        TIMESTAMP request_timestamp
+        VARCHAR(50) service_name
+        VARCHAR(255) endpoint
+        VARCHAR(10) request_method
+        INTEGER response_status
+        INET ip_address
+    }
+
+    api_keys ||--o{ rate_limits : "has"

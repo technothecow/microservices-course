@@ -1,0 +1,100 @@
+specification {
+  element actor
+  element system
+  element component
+  element service {
+    style {
+      color indigo
+    }
+  }
+  element database {
+    style {
+      color blue
+      shape cylinder
+    }
+  }
+  element table
+  element messageBroker
+}
+
+model {
+  user = actor 'User'
+  app = system 'Social Network' {
+    component UI
+    component backend {
+      messageBroker kafka {
+        description 'i know nothing about kafka'
+      }
+      service sn-gateway {
+        description 'takes all requests from UI'
+        database postgres {
+          table api_keys
+          table rate_limits
+          table audit_logs
+        }
+      }
+      service sn-users {
+        description 'responsible for registration and authentification of users and stores all info about them'
+        database postgres {
+          table users
+          table user_profiles
+          table followers
+        }
+      }
+      service sn-statistics {
+        description 'responsible for counting likes, views and comments'
+        database clickhouse {
+          table user_interactions
+          table hourly_content_stats
+          table daily_user_stats
+        }
+      }
+      service sn-posts {
+        description 'responsible for storing user posts and comments'
+        database cassandra {
+          table posts
+          table post_interactions
+          table comments
+        }
+      }
+      sn-gateway -> sn-users 'gRPC' {
+        description 'for registration/auth info'
+      }
+      sn-gateway -> kafka {
+        description 'views, likes, comments events'
+      }
+      kafka -> sn-statistics {
+        description 'views, likes, comments events'
+      }
+      sn-gateway -> sn-statistics 'gRPC' {
+        description 'requests for stats'
+      }
+      sn-gateway -> sn-posts 'gRPC' {
+        description "proxies user's requests"
+      }
+    }
+
+    UI -> sn-gateway 'HTTPS REST API'
+  }
+  user -> UI 'browser'
+}
+
+views {
+  view base {
+    title 'base'
+    include *
+    include user
+    include app.**
+    style user {
+      shape person
+    }
+    style app.UI {
+      shape browser
+    }
+    style app {
+      color muted
+      opacity 30%
+      border dotted
+    }
+  }
+}
