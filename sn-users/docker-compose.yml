@@ -1,0 +1,48 @@
+services:
+  sn-users:
+    build:
+      context: ./sn-users
+      dockerfile: Dockerfile
+    expose:
+      - "50002"
+    environment:
+      - DB_HOST=sn-users-postgres
+      - DB_PORT=5432
+      - DB_NAME=users
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+    networks:
+      - sn-network
+    depends_on:
+      - sn-users-migrations
+      - sn-users-postgres
+
+  sn-users-migrations:
+    build:
+      context: ./sn-users
+      dockerfile: Dockerfile
+    command: python -m src.db.migrations
+    environment:
+      - DB_HOST=sn-users-postgres
+      - DB_PORT=5432
+      - DB_NAME=users
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+    networks:
+      - sn-network
+    depends_on:
+      - sn-users-postgres
+
+  sn-users-postgres:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=users
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - sn-users-postgres-data:/var/lib/postgresql/data
+    networks:
+      - sn-network
+
+volumes:
+  sn-users-postgres-data:

@@ -1,0 +1,14 @@
+services:
+  sn-gateway:
+    build:
+      context: ./sn-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "50001:50001"
+    environment:
+      - USERS_SERVICE_HOST=sn-users
+      - USERS_SERVICE_PORT=50002
+    networks:
+      - sn-network
+    depends_on:
+      - sn-users
