@@ -25,3 +25,10 @@ All services should start with the following command:
 ```bash
 cd <service> && python -m src.main
 ```
+
+## Docker launch
+
+To launch the service in docker you need to run the following command in the root of the project:
+```bash
+docker-compose -f docker-compose.yml -f sn-gateway/docker-compose.yml -f sn-users/docker-compose.yml up --build
+```
